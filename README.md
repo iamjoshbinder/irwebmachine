@@ -14,7 +14,7 @@ webmachine applications from a REPL like IRB or Pry. GET, POST, DELETE, &
 PUT requests can be made, the call stack of a request can be shown, and   
 you can step inside any method on the call stack to inspect state at that   
 point in the request. You can also step through a request as it happens,  
-altering state to change the behavior of a request.
+altering state to change the behavior of a resource.
 
 __USAGE__
 
