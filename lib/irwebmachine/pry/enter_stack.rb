@@ -15,7 +15,7 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
     @app = target.eval("app")
     @req = @app.last_request
     @hit = false
-    @pry = Pry.new :commands => Nav
+    @pry = Pry.new :commands => IRWebmachine::Pry::Nav
   end
 
   def process

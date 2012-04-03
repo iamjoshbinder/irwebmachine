@@ -4,8 +4,9 @@ module IRWebmachine::Pry
       throw(:breakout, :next)
     end
 
-    command "prev" do
+    command "prev" do 
       _pry_.binding_stack.pop
+      _pry_.run_command "whereami"
     end 
   end
 end
