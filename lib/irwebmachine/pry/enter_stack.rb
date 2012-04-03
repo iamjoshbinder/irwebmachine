@@ -26,12 +26,12 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
 
       if hit?
         case pry.repl(trace.binding) 
-        when nil, :finish
+        when nil
           throw(:tracer, :stop)
         when :next
           pry.binding_stack += [trace.binding] 
         when :prev
-          # implemented to operate within the REPL loop we spawn up top.
+          # implemented to operate within REPL loop spawned up top.  
         end
       end
     end

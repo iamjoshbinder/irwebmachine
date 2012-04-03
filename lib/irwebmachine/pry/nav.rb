@@ -1,9 +1,5 @@
 module IRWebmachine::Pry
   Nav = Pry::CommandSet.new do
-    command "finish" do
-      throw(:breakout, :finish)
-    end
-
     command "next" do
       throw(:breakout, :next)
     end
