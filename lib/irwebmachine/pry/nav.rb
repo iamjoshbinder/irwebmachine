@@ -6,7 +6,7 @@ module IRWebmachine::Pry
 
     command "prev" do
       if _pry_.binding_stack.size == 1
-        _pry_.run_command "exit-all" # last on stack, exit subsession.
+        _pry_.run_command "exit-all"
       else
         _pry_.binding_stack.pop
         _pry_.run_command "whereami"

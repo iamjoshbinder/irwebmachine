@@ -48,7 +48,16 @@ private
   end
 
   def index
-    Integer(args.first) 
+    return @index if defined?(@index)  
+    
+    position = args.first
+    if position.nil?
+      @index = 0
+    elsif position =~ /^(\d+)$/ 
+      @index = position.to_i
+    else
+      raise Pry::CommandError, "'#{position}' is an invalid stack entry."
+    end
   end
 
 end
