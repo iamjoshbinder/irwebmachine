@@ -15,18 +15,18 @@ class IRWebmachine::MockRequest
     @tracer.stack
   end
 
-  def run(type, path, params = {}, body = "")
+  def run(type, path, params = {}, headers = {}, body = "")
     uri = URI::HTTP.build(host: "localhost", path: path)
     uri.query_params.merge!(params) 
 
-    @req = Webmachine::Request.new(type.upcase, uri, {}, body) 
+    @req = Webmachine::Request.new(type.upcase, uri, headers, body)
     @res = Webmachine::Response.new
     @tracer.trace! { @app.dispatcher.dispatch(@req, @res) }
     @res
   end
 
   def to_a
-    [@req.method, @req.uri.path, @req.query, @req.body]
+    [@req.method, @req.uri.path, @req.query, @req.headers, @req.body]
   end
 
 end
