@@ -63,6 +63,10 @@ happens in real time, so if method B sets @foo but method A executes beforehand,
     [6] pry(My::Resource):5> instance_variables
     => [:@request, :@response, :@session]
 
+__PLATFORM SUPPORT__
+
+  - CRuby 1.9+
+
 __LICENSE__
 
 See LICENSE.txt
