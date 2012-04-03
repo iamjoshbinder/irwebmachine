@@ -6,3 +6,4 @@ Rake::TestTask.new do |t|
   t.name = "test"
   t.test_files = Dir["test/*_test.rb"]
 end
+task :default => :test
