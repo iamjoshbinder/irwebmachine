@@ -28,7 +28,7 @@ class IRWebmachine::MockRequest
     [@req.method, @req.uri.path, @req.query, @req.body]
   end
 
-  private
+private
 
   # Taken from webmachine-test.
   def add_query_params(uri, params)
