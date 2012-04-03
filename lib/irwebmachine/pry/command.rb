@@ -9,9 +9,10 @@
 class IRWebmachine::Pry::Command < Pry::ClassCommand
   def self.name(name=nil)
     if name
-      @name = name
       command_options.merge!(listing: name) 
+      @name = name
+    else
+      @name
     end
-    @name
   end
 end
