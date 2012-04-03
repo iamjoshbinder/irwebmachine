@@ -10,7 +10,7 @@ class Resource < Webmachine::Resource
   end
 
   def allowed_methods
-    %W(GET POST DELETE PUT)
+    %w(GET POST DELETE PUT)
   end
 
   # POST
@@ -31,6 +31,11 @@ class Resource < Webmachine::Resource
   # DELETE
   def delete_resource
     response.body = "DELETE OK"
+  end
+
+  def finish_request
+    response.headers['X-Request-Query'] = request.query
+    response.headers['X-Request-Headers'] = request.headers
   end
 end
 
@@ -58,6 +63,20 @@ class MockApplicationTest < Test::Unit::TestCase
   def test_put
     res = @app.put "/mock_application"
     assert_equal "PUT OK", res.body
+  end
+
+  def test_query
+    %w(get post delete put).each do |verb|
+      res = @app.send(verb, "/mock_application", {"foo" => "bar"}) 
+      assert_equal({"foo" => "bar"}, res.headers['X-Request-Query'])
+    end
+  end
+
+  def test_headers
+    %w(get post delete put).each do |verb|
+      res = @app.send(verb, "/mock_application", {}, {'Answer' => '42'})
+      assert_equal({'Answer' => '42'}, res.headers['X-Request-Headers'])
+    end
   end
 
 private
