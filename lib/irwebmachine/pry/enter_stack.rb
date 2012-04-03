@@ -48,9 +48,9 @@ private
   end
 
   def index
-    return @index if defined?(@index)  
-    
+    return @index if defined?(@index)   
     position = args.first
+
     if position.nil?
       @index = 0
     elsif position =~ /^(\d+)$/ 
