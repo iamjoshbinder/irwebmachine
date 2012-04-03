@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "irwebmachine"
   gem.require_paths = ["lib"]
   gem.version       = IRWebmachine::VERSION
+
+  gem.add_runtime_dependency "uri-query_params", "~> 0.7.0"
 end

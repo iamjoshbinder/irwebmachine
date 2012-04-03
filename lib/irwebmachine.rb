@@ -1,5 +1,6 @@
 module IRWebmachine
-  
+ 
+  require "uri/query_params"
   require_relative "irwebmachine/mock_application"
   require_relative "irwebmachine/mock_request"
   require_relative "irwebmachine/trace"
