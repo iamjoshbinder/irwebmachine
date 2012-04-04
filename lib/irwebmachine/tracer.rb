@@ -27,7 +27,7 @@ class IRWebmachine::Tracer
     @events.concat(args)
   end
 
-  private
+private
 
   def tracer
     @tracer ||= lambda do |event, file, lineno, _, binding, receiver|
