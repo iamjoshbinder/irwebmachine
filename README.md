@@ -14,8 +14,13 @@ webmachine applications from a REPL like IRB or Pry. GET, POST, DELETE, &
 PUT requests can be made, the call stack of a request can be shown, and   
 you can step inside any method on the call stack to inspect state at that   
 point in the request. You can also step through a request as it happens,  
-altering state to change the behavior of a resource. Usage examples for Pry,  
-and IRB can be found in the [wiki](https://github.com/generalassembly/irwebmachine/wiki/).
+altering state to change the behavior of a resource.
+
+
+__USAGE__
+
+- [Pry (wiki)](https://github.com/generalassembly/irwebmachine/wiki/Pry)
+- [IRB (wiki)](https://github.com/generalassembly/irwebmachine/wiki/irb)
 
 __PLATFORM SUPPORT__
 
