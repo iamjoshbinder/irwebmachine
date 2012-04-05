@@ -4,7 +4,7 @@ begin
   require 'bundler/gem_tasks'
 rescue LoadError
   require 'rubygems/package_task'
-  Gem::PackageTask.new(eval(IO.read('irwebmachine.gemspec'))) do |pkg|
+  Gem::PackageTask.new Gem::Specification.load('irwebmachine.gemspec') do |pkg|
     pkg.need_tar, pkg.need_zip = true, false
   end
 end
