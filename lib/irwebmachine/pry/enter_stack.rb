@@ -29,9 +29,11 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
         when nil
           throw(:tracer, :stop)
         when :next
-          pry.binding_stack += [frame.binding] 
+          throw(:tracer, :next) 
         when :prev
-          # implemented to operate within REPL loop spawned up top.  
+          throw(:tracer, :prev)
+        when :continue
+          throw(:tracer, :continue) 
         end
       end
     end
@@ -45,6 +47,10 @@ private
 
   def hit?
     @hit
+  end
+
+  def skip?
+    @skip
   end
 
   def breakpoint

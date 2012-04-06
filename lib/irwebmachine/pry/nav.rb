@@ -1,16 +1,15 @@
 module IRWebmachine::Pry
   Nav = Pry::CommandSet.new do
+    command "continue" do
+      throw(:breakout, :continue)  
+    end
+
     command "next" do
       throw(:breakout, :next)
     end
 
     command "prev" do
-      if _pry_.binding_stack.size == 1
-        _pry_.run_command "exit-all"
-      else
-        _pry_.binding_stack.pop
-        _pry_.run_command "whereami"
-      end
+      throw(:breakout, :prev) 
     end 
   end
 end

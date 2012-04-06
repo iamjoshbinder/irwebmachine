@@ -10,7 +10,7 @@ class IRWebmachine::Tracer
   end
 
   def trace!
-    set_trace_func method(:tracer).to_proc
+    set_trace_func(tracer)
     yield
     set_trace_func(nil)
   end
@@ -29,20 +29,38 @@ class IRWebmachine::Tracer
 
 private
 
-  def tracer(event, file, lineno, id, binding, receiver) 
-    begin
-      has_ancestor = @targets.any? do |t| 
-        receiver.is_a?(Module) && receiver.ancestors.include?(t) 
-      end
+  def tracer 
+    Proc.new do |event, file, lineno, id, binding, receiver|
+      begin
+        @skip && event != "call" ? (next) : (@skip = false)
+          
+        has_ancestor = @targets.any? do |t| 
+          receiver.is_a?(Module) && receiver.ancestors.include?(t) 
+        end
 
-      if has_ancestor && @events.include?(event)
-        stack << IRWebmachine::Frame.new(file, lineno, event, binding)
-        action = catch(:tracer) { @on_event.call(stack.last) if @on_event }
-        set_trace_func(nil) if action == :stop
+        if has_ancestor && @events.include?(event)
+          stack << IRWebmachine::Frame.new(file, lineno, event, binding)
+          action = catch(:tracer) { @on_event.call(stack.last) if @on_event }
+          handle(action)
+        end
+      rescue Exception => e
+        print_error(e)
+        set_trace_func(nil)
       end
-    rescue Exception => e
-      print_error(e)
-      set_trace_func(nil)
+    end
+  end
+
+  def handle(action)
+    case action
+    when :continue
+      # no-op (for now, needs to be aware of :prev index)
+    when :next
+      @skip = true
+    when :prev
+      action = catch(:tracer) { @on_event.call(stack.to_a[-2]) }
+      handle(action)
+    when :stop
+      set_trace_func(nil) 
     end
   end
 
