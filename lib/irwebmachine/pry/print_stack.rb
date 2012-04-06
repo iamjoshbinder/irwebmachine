@@ -11,8 +11,7 @@ class IRWebmachine::Pry::PrintStack < IRWebmachine::Pry::Command
     Optionally accepts a -f switch for filtering the stack.
   BANNER
 
-  def initialize(*)
-    super
+  def setup
     @app    = target.eval("app")
     @stack  = @app.last_request.stack
     @filter = nil
@@ -28,7 +27,7 @@ class IRWebmachine::Pry::PrintStack < IRWebmachine::Pry::Command
     stagger_output stack.join("\n") 
   end
 
-  private
+private
 
   def filter
     @filter ||= Regexp.new(opts[:f].to_s)
@@ -38,4 +37,4 @@ end
 
 set = Pry::CommandSet.new
 set.commands["print-stack"] = IRWebmachine::Pry::PrintStack 
-Pry.commands.import(set) 
+Pry.commands.import(set)

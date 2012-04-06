@@ -19,17 +19,17 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
   end
 
   def process
-    @app.dup.do_request(*@req) do |trace, position|
-      if position == index
+    @app.dup.do_request(*@req) do |frame, position|
+      if frame.to_s =~ breakpoint 
         @hit = true
       end
 
       if hit?
-        case pry.repl(trace.binding) 
+        case pry.repl(frame.binding) 
         when nil
           throw(:tracer, :stop)
         when :next
-          pry.binding_stack += [trace.binding] 
+          pry.binding_stack += [frame.binding] 
         when :prev
           # implemented to operate within REPL loop spawned up top.  
         end
@@ -47,17 +47,8 @@ private
     @hit
   end
 
-  def index
-    return @index if defined?(@index)   
-    position = args.first
-
-    if position.nil?
-      @index = 0
-    elsif position =~ /^(\d+)$/ 
-      @index = position.to_i
-    else
-      raise Pry::CommandError, "'#{position}' is an invalid stack entry."
-    end
+  def breakpoint
+    @breakpoint ||= Regexp.new(args.first)
   end
 
 end
