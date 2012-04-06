@@ -49,10 +49,6 @@ private
     @hit
   end
 
-  def skip?
-    @skip
-  end
-
   def breakpoint
     @breakpoint ||= Regexp.new(args.first)
   end

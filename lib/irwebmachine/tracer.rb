@@ -32,7 +32,7 @@ private
   def tracer 
     Proc.new do |event, file, lineno, id, binding, receiver|
       begin
-        @skip && event != "call" ? (next) : (@skip = false)
+        skip? && event != "call" ? (next) : (@skip = false)
           
         has_ancestor = @targets.any? do |t| 
           receiver.is_a?(Module) && receiver.ancestors.include?(t) 
@@ -62,6 +62,10 @@ private
     when :stop
       set_trace_func(nil) 
     end
+  end
+
+  def skip?
+    @skip
   end
 
   def print_error(e)
