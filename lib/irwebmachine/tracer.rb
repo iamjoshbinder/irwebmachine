@@ -37,7 +37,7 @@ private
 
       if has_ancestor && @events.include?(event)
         stack << IRWebmachine::Frame.new(file, lineno, event, binding)
-        action = catch(:tracer) { @on_event.call(stack.last, stack.size) if @on_event }
+        action = catch(:tracer) { @on_event.call(stack.last) if @on_event }
         set_trace_func(nil) if action == :stop
       end
     rescue Exception => e
