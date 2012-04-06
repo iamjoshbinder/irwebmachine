@@ -3,10 +3,10 @@ class IRWebmachine::Tracer
   attr_reader :stack
 
   def initialize
-    @targets = []
-    @events  = []
-    @stack   = []
+    @targets  = []
+    @events   = []
     @on_event = nil
+    @stack = IRWebmachine::Stack.new 
   end
 
   def trace!
@@ -36,7 +36,7 @@ private
       end
 
       if has_ancestor && @events.include?(event)
-        stack << IRWebmachine::Trace.new(file, lineno, binding)
+        stack << IRWebmachine::Frame.new(file, lineno, event, binding)
         action = catch(:tracer) { @on_event.call(stack.last, stack.size-1) if @on_event }
         set_trace_func(nil) if action == :stop
       end

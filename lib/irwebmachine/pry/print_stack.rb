@@ -23,14 +23,9 @@ class IRWebmachine::Pry::PrintStack < IRWebmachine::Pry::Command
   end
   
   def process
-    stack = 
-    @stack.map.with_index do |trace, index|
-      if trace.to_s =~ filter
-        "#{text.yellow(index)}: #{colorize_code(trace)}"
-      end
-    end
-
-    stagger_output stack.compact.join("\n")
+    stack = @stack.select { |frame| frame.event?(:call) && frame.to_s =~ filter }
+    stack.map!.with_index { |frame, i| "#{i}: #{colorize_code(frame.to_s)}" } 
+    stagger_output stack.join("\n") 
   end
 
   private

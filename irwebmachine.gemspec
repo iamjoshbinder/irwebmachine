@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = IRWebmachine::VERSION
 
   gem.add_runtime_dependency "uri-query_params", "~> 0.7.0"
+  gem.add_runtime_dependency "graph", "~> 2.5.0"
 end

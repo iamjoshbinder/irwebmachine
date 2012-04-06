@@ -16,7 +16,7 @@ class IRWebmachine::MockApplication
 
   def do_request(*args, &block)
     tracer = IRWebmachine::Tracer.new
-    tracer.add_event "return"
+    tracer.add_event "call"
     tracer.add_target Webmachine::Resource::Callbacks
     tracer.on_event(&block) if block
 
