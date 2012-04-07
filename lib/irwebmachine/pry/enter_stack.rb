@@ -14,43 +14,32 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
     super
     @app = target.eval("app")
     @req = @app.last_request
-    @hit = false
     @pry = Pry.new :commands => IRWebmachine::Pry::Nav
   end
 
   def process
-    @app.dup.do_request(*@req) do |frame, position|
-      if frame.to_s =~ breakpoint 
-        @hit = true
-      end
+    frame = nil
 
-      if hit?
-        case pry.repl(frame.binding) 
-        when nil
-          throw(:tracer, :stop)
-        when :next
-          throw(:tracer, :next) 
-        when :prev
-          throw(:tracer, :prev)
-        when :continue
-          throw(:tracer, :continue) 
-        end
+    @app.dup.do_request(*@req) do |stack|
+      frame = stack.next if !frame
+
+      case @pry.repl(frame.binding) 
+      when nil
+        throw :breakout 
+      when :next
+        # nothing (yet).
+      when :prev
+        frame = stack.prev
+      when :continue
+        frame = stack.next
       end
     end
   end
 
 private 
  
-  def pry
-    @pry
-  end
+  def repl target
 
-  def hit?
-    @hit
-  end
-
-  def breakpoint
-    @breakpoint ||= Regexp.new(args.first)
   end
 
 end

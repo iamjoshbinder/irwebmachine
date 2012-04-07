@@ -1,82 +1,64 @@
 class IRWebmachine::Tracer
-
-  attr_reader :stack
-
+  
   def initialize
-    @targets  = []
-    @events   = []
+    @thread   = nil
     @on_event = nil
-    @stack = IRWebmachine::Stack.new 
+    @stack   = []
+    @targets = []
+    @events  = []
   end
 
-  def trace!
-    set_trace_func(tracer)
-    yield
-    set_trace_func(nil)
-  end
-
-  def on_event(&block) 
+  def on_event &block
     @on_event = block
   end
 
-  def add_target(*args) 
-    @targets.concat(args)
+  def add_stack stack
+    @stack = stack
   end
 
-  def add_event(*args)
-    @events.concat(args)
+  def add_event *event
+    @events.push(*event)
   end
 
-private
+  def add_target *target 
+    @targets.push(*target)
+  end
+ 
+  def finished?
+    [false, nil].include? @thread.status
+  end
 
-  def tracer 
-    Proc.new do |event, file, lineno, id, binding, receiver|
-      begin
-        skip? && event != "call" ? (next) : (@skip = false)
-          
-        has_ancestor = @targets.any? do |t| 
-          receiver.is_a?(Module) && receiver.ancestors.include?(t) 
-        end
+  def continue
+    @thread.run
+  end
 
-        if has_ancestor && @events.include?(event)
-          stack << IRWebmachine::Frame.new(file, lineno, event, binding)
-          action = catch(:tracer) { @on_event.call(stack.last) if @on_event }
-          handle(action)
-        end
-      rescue Exception => e
-        print_error(e)
-        set_trace_func(nil)
+  def stack
+    @stack
+  end
+
+  def trace
+    @thread ||=
+    Thread.new do
+      Thread.current.set_trace_func tracer
+      yield
+      Thread.current.set_trace_func(nil) 
+    end
+  end
+
+ private 
+
+  def tracer
+    Proc.new do |event, file, lineno, id, binding, klass|
+      has_ancestor = @targets.any? do |t| 
+        klass.is_a?(Module) && klass.ancestors.include?(t) 
+      end
+     
+      if has_ancestor && @events.include?(event)
+        frame = IRWebmachine::Frame.new(file, lineno, event, binding)
+        stack << frame
+        @on_event.call(stack) if @on_event 
+        Thread.stop
       end
     end
-  end
-
-  def handle(action)
-    case action
-    when :continue
-      # no-op (for now, needs to be aware of :prev index)
-    when :next
-      @skip = true
-    when :prev
-      action = catch(:tracer) { @on_event.call(stack.to_a[-2]) }
-      handle(action)
-    when :stop
-      set_trace_func(nil) 
-    end
-  end
-
-  def skip?
-    @skip
-  end
-
-  def print_error(e)
-    puts <<-CRASH
-
-      -- CRASH (IRWebmachine) -- 
-      
-      Exception => #{e.class}
-      Reason    => #{e.message}
-      Backtrace => #{e.backtrace.join "\n"}
-    
-    CRASH
   end
 end

@@ -1,16 +1,13 @@
 module IRWebmachine::Pry
   Nav = Pry::CommandSet.new do
-    command "continue" do
-      throw(:breakout, :continue)  
-    end
+    command("continue") { throw(:breakout, :continue) }
+    alias_command "c", "continue"
 
-    command "next" do
-      throw(:breakout, :next)
-    end
+    command("next") { throw(:breakout, :next) }
+    alias_command "n", "next"
 
-    command "prev" do
-      throw(:breakout, :prev) 
-    end 
+    command("prev") { throw(:breakout, :prev) }
+    alias_command "p", "prev"
   end
 end
 

@@ -1,8 +1,10 @@
 class IRWebmachine::Stack 
-  include Enumerable
-
   def initialize(stack = [])
     @stack = stack
+    @tracer = IRWebmachine::Tracer.new
+    @tracer.add_stack(self) 
+    @tracer.add_event "call", "return"
+    @tracer.add_target Webmachine::Resource::Callbacks
   end
  
   def push(*args)
@@ -18,18 +20,21 @@ class IRWebmachine::Stack
     @stack.last
   end
 
-  def each(&block)
-    if block_given?
-      @stack.each(&block)
-      self
-    else
-      enum_for(:each)
-    end
+  def tracer
+    @tracer
+  end
+
+  def next
+    @tracer.continue
+  end
+
+  def to_a
+    @stack.dup
   end
 
   def to_graph
     graph = Graph.new
-    each { |frame| graph.edge(frame.to_s) if frame.event?(:call) }
+    @stack.each { |frame| graph.edge(frame.to_s) if frame.event?(:call) }
     graph
   end
 end

@@ -15,15 +15,8 @@ class IRWebmachine::MockApplication
   end
 
   def do_request(*args, &block)
-    tracer = IRWebmachine::Tracer.new
-    tracer.add_event "call", "return"
-    tracer.add_target Webmachine::Resource::Callbacks
-    tracer.on_event(&block) if block
-
-    req = IRWebmachine::MockRequest.new(@app)
-    req.add_tracer(tracer)
-    @req = req
-    @res = req.run(*args)
+    @req = IRWebmachine::MockRequest.new(@app)
+    @res = @req.run(*args)
   end
 
   %w(get post delete put).each do |type|

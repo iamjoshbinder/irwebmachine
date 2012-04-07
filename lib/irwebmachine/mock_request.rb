@@ -4,29 +4,37 @@ class IRWebmachine::MockRequest
     @app = app
     @req = nil
     @res = nil
-    @tracer = IRWebmachine::Tracer.new
-  end
-
-  def add_tracer(tracer)
-    @tracer = tracer
+    @stack = IRWebmachine::Stack.new
   end
 
   def stack
-    @tracer.stack
+    @stack
   end
 
-  def run(type, path, params = {}, headers = {}, body = "")
-    uri = URI::HTTP.build(host: "localhost", path: path)
-    uri.query_params.merge!(params) 
+  def run_nonblock *rest
+    setup *rest
+    @stack.tracer.trace { @app.dispatcher.dispatch(@req, @res) }
+    @res
+  end
 
-    @req = Webmachine::Request.new(type.upcase, uri, headers, body)
-    @res = Webmachine::Response.new
-    @tracer.trace! { @app.dispatcher.dispatch(@req, @res) }
+  def run *rest
+    setup *rest 
+    @stack.tracer.trace { @app.dispatcher.dispatch(@req, @res) }
+    @stack.tracer.continue until @stack.tracer.finished?
     @res
   end
 
   def to_a
     [@req.method, @req.uri.path, @req.query, @req.headers, @req.body]
+  end
+
+private
+
+  def setup type, path, params = {}, headers = {}, body = ""
+    uri = URI::HTTP.build(host: "localhost", path: path)
+    uri.query_params.merge!(params) 
+    @req = Webmachine::Request.new(type.upcase, uri, headers, body)
+    @res = Webmachine::Response.new
   end
 
 end
