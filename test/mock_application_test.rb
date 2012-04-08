@@ -42,7 +42,8 @@ end
 class MockApplicationTest < Test::Unit::TestCase
 
   def setup
-    @app = IRWebmachine::MockApplication.new(app) 
+    IRWebmachine.app = app
+    @app = IRWebmachine.app
   end
 
   def test_get
