@@ -16,6 +16,9 @@ you can step inside any method on the call stack to inspect state at that
 point in the request. You can also step through a request as it happens,  
 altering state to change the behavior of a resource.
 
+IRWebmachine is still experimental and not ready for public release yet but it is  
+definitely usable and useful. Design and implementation is still on going, and  
+as soon as it feels ready a public release will come soon after.
 
 __USAGE__
 
