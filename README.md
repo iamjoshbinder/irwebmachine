@@ -33,6 +33,10 @@ __LICENSE__
 
 See LICENSE.txt
 
+__TODO__
+
+  - Wiki documentation for 'continue' command.
+
 __INSTALL__
 
 gem install irwebmachine
