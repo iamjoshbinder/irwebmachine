@@ -26,7 +26,7 @@ class IRWebmachine::Tracer
       @thread.run 
       return if finished? 
     end
-    @queue.deq 
+    @queue.deq
   end
 
   def trace
@@ -42,15 +42,36 @@ private
 
   def tracer
     Proc.new do |event, file, lineno, id, binding, klass|
-      has_ancestor = @targets.any? do |t| 
-        klass.is_a?(Module) && klass.ancestors.include?(t) 
-      end
+      try do
+        has_ancestor = @targets.any? do |t| 
+          klass.is_a?(Module) && klass.ancestors.include?(t) 
+        end
     
-      if has_ancestor && @events.include?(event)
-        frame = IRWebmachine::Frame.new(file, lineno, event, binding)
-        @queue.enq frame
-        Thread.stop
+        if has_ancestor && @events.include?(event)
+          frame = IRWebmachine::Frame.new(file, lineno, event, binding)
+          @queue.enq frame
+          Thread.stop
+        end
       end
+    end
+  end
+
+  def try
+    begin
+      yield
+    rescue Exception => e
+      puts <<-CRASH
+        
+       ----------------------
+        CRASH (IRWebmachine) 
+       ----------------------
+
+       Exception #{e.class}
+       Reason    #{e.message}
+
+      CRASH
+
+      Thread.current.set_trace_func(nil)
     end
   end
 end
