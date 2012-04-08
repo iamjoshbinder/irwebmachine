@@ -59,6 +59,23 @@ private
   def try
     begin
       yield
+    rescue SystemStackError => e
+      puts <<-CRASH
+
+       ----------------------
+        CRASH (IRWebmachine) 
+       ----------------------
+
+       The tracer appears to be locked in infinite 
+       recursion. This may be a bug in IRWebmachine, 
+       but your own code may be the cause.
+
+       The tracer will stop execution now, but the 
+       stack up to the point of infinite recursion
+       is retained for debugging.
+
+      CRASH
+      Thread.current.set_trace_func(nil)
     rescue Exception => e
       puts <<-CRASH
         
@@ -66,11 +83,15 @@ private
         CRASH (IRWebmachine) 
        ----------------------
 
-       Exception #{e.class}
-       Reason    #{e.message}
+       The tracer has crashed. 
+       This is a bug in IRWebmachine.
+       Please report to https://github.com/generalassembly/irwebmachine.
+       Thanks!
+
+       Error (#{e.class})
+       #{e.message}
 
       CRASH
-
       Thread.current.set_trace_func(nil)
     end
   end
