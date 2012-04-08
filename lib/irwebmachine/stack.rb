@@ -1,8 +1,8 @@
 class IRWebmachine::Stack 
   def initialize(stack = [])
     @stack = stack
+    @index = 0
     @tracer = IRWebmachine::Tracer.new
-    @tracer.add_stack(self) 
     @tracer.add_event "call", "return"
     @tracer.add_target Webmachine::Resource::Callbacks
   end
@@ -24,8 +24,30 @@ class IRWebmachine::Stack
     @tracer
   end
 
+  def previous
+    @index -= 1 if @index != 0
+    @stack[@index]
+  end
+
+  def continue
+    if @index < @stack.size - 1
+      @index += 1
+    else
+      @index += 1 if @stack.size != 0 
+      @stack << tracer.continue
+    end
+
+    @stack[@index]
+  end
+
   def next
-    @tracer.continue
+    frame = nil
+
+    while frame.nil? || !frame.event?(:call) 
+      frame = continue
+    end
+
+    frame
   end
 
   def to_a

@@ -1,19 +1,12 @@
+require 'thread'
+
 class IRWebmachine::Tracer
   
   def initialize
-    @thread   = nil
-    @on_event = nil
-    @stack   = []
+    @thread  = nil
+    @queue   = Queue.new
     @targets = []
     @events  = []
-  end
-
-  def on_event &block
-    @on_event = block
-  end
-
-  def add_stack stack
-    @stack = stack
   end
 
   def add_event *event
@@ -29,11 +22,11 @@ class IRWebmachine::Tracer
   end
 
   def continue
-    @thread.run
-  end
-
-  def stack
-    @stack
+    while @queue.empty?
+      @thread.run 
+      return if finished? 
+    end
+    @queue.deq 
   end
 
   def trace
@@ -45,18 +38,17 @@ class IRWebmachine::Tracer
     end
   end
 
- private 
+private 
 
   def tracer
     Proc.new do |event, file, lineno, id, binding, klass|
       has_ancestor = @targets.any? do |t| 
         klass.is_a?(Module) && klass.ancestors.include?(t) 
       end
-     
+    
       if has_ancestor && @events.include?(event)
         frame = IRWebmachine::Frame.new(file, lineno, event, binding)
-        stack << frame
-        @on_event.call(stack) if @on_event 
+        @queue.enq frame
         Thread.stop
       end
     end

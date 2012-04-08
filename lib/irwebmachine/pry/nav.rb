@@ -6,7 +6,7 @@ module IRWebmachine::Pry
     command("next") { throw(:breakout, :next) }
     alias_command "n", "next"
 
-    command("prev") { throw(:breakout, :prev) }
+    command("prev") { throw(:breakout, :previous) }
     alias_command "p", "prev"
   end
 end

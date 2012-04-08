@@ -1,7 +1,7 @@
 class IRWebmachine::MockRequest
 
-  def initialize(app)
-    @app = app
+  def initialize
+    @app = IRWebmachine.app.delegate
     @req = nil
     @res = nil
     @stack = IRWebmachine::Stack.new
@@ -20,7 +20,11 @@ class IRWebmachine::MockRequest
   def run *rest
     setup *rest 
     @stack.tracer.trace { @app.dispatcher.dispatch(@req, @res) }
-    @stack.tracer.continue until @stack.tracer.finished?
+    
+    while frame = @stack.tracer.continue
+      @stack << frame
+    end
+
     @res
   end
 

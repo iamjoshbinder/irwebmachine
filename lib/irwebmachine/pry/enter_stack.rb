@@ -10,37 +10,32 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
     request. BREAKPOINT can be retrieved from the print-stack command.
   BANNER
 
-  def initialize(*)
-    super
-    @app = target.eval("app")
-    @req = @app.last_request
+  def setup
+    @app = target.eval "app"
     @pry = Pry.new :commands => IRWebmachine::Pry::Nav
+    @req = IRWebmachine::MockRequest.new
   end
 
   def process
-    frame = nil
-
-    @app.dup.do_request(*@req) do |stack|
-      frame = stack.next if !frame
-
-      case @pry.repl(frame.binding) 
-      when nil
-        throw :breakout 
-      when :next
-        # nothing (yet).
-      when :prev
-        frame = stack.prev
-      when :continue
-        frame = stack.next
-      end
-    end
+    @req.run_nonblock *@app.last_request
+    repl @req.stack.continue 
   end
 
 private 
- 
-  def repl target
-
+  
+  def repl frame
+    case @pry.repl(frame)
+    when nil
+      # no-op (exit). 
+    when :next
+      repl @req.stack.next
+    when :continue
+      repl @req.stack.continue
+    when :previous
+      repl @req.stack.previous
+    end
   end
+
 
 end
 

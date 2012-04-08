@@ -1,9 +1,13 @@
 class IRWebmachine::MockApplication
   
   def initialize(app)
-    @app = app
+    @delegate = app
     @req = nil
     @res = nil
+  end
+
+  def delegate
+    @delegate
   end
 
   def last_response
@@ -15,7 +19,7 @@ class IRWebmachine::MockApplication
   end
 
   def do_request(*args, &block)
-    @req = IRWebmachine::MockRequest.new(@app)
+    @req = IRWebmachine::MockRequest.new    
     @res = @req.run(*args)
   end
 
