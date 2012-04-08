@@ -95,4 +95,5 @@ private
       Thread.current.set_trace_func(nil)
     end
   end
+
 end
