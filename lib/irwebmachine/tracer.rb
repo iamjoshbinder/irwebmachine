@@ -32,7 +32,7 @@ class IRWebmachine::Tracer
   def trace
     @thread ||=
     Thread.new do
-      Thread.current.set_trace_func tracer
+      Thread.current.set_trace_func method(:tracer).to_proc
       yield
       Thread.current.set_trace_func(nil) 
     end
@@ -40,18 +40,16 @@ class IRWebmachine::Tracer
 
 private 
 
-  def tracer
-    Proc.new do |event, file, lineno, id, binding, klass|
-      try do
-        has_ancestor = @targets.any? do |t| 
-          klass.is_a?(Module) && klass.ancestors.include?(t) 
-        end
-    
-        if has_ancestor && @events.include?(event)
-          frame = IRWebmachine::Frame.new(file, lineno, event, binding)
-          @queue.enq frame
-          Thread.stop
-        end
+  def tracer event, file, lineno, id, binding, klass
+    try do
+      has_ancestor = @targets.any? do |t| 
+        klass.is_a?(Module) && klass.ancestors.include?(t) 
+      end
+  
+      if has_ancestor && @events.include?(event)
+        frame = IRWebmachine::Frame.new(file, lineno, event, binding)
+        @queue.enq frame
+        Thread.stop
       end
     end
   end
