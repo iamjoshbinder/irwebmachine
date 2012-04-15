@@ -22,8 +22,20 @@ class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
   end
 
 private 
-  
+
   def repl frame
+    until hit? 
+      if breakpoint =~ frame.to_s
+        @hit = true
+      else
+        if @req.stack.exhausted?
+          raise Pry::CommandError, 'No matching breakpoint.'
+        else
+          frame = @req.stack.continue
+        end
+      end
+    end
+
     case @pry.repl(frame)
     when nil
       # no-op (exit). 
@@ -36,6 +48,13 @@ private
     end
   end
 
+  def hit?
+    @hit
+  end
+
+  def breakpoint
+    @breakpoint ||= Regexp.new(args.first.to_s)
+  end
 
 end
 

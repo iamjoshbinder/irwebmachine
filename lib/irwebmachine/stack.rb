@@ -29,6 +29,10 @@ class IRWebmachine::Stack
     @stack[@index]
   end
 
+  def exhausted?
+    @tracer.finished?
+  end
+
   def continue
     if @index < @stack.size - 1
       @index += 1
