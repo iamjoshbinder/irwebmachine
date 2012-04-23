@@ -1,6 +1,5 @@
 module IRWebmachine::Pry
   require "pry"
-  require_relative "pry/command"
   require_relative "pry/print_stack"
   require_relative "pry/enter_stack"
   require_relative "pry/nav"

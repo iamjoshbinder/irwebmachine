@@ -1,6 +1,6 @@
-class IRWebmachine::Pry::EnterStack < IRWebmachine::Pry::Command
-  
-  name        'enter-stack'
+class IRWebmachine::Pry::EnterStack < Pry::ClassCommand
+
+  match       'enter-stack'
   group       'irwebmachine'
   description 'Enters the context of a method on the call stack for a webmachine request.'
   banner <<-BANNER

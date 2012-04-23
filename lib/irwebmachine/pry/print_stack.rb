@@ -1,6 +1,6 @@
-class IRWebmachine::Pry::PrintStack < IRWebmachine::Pry::Command
-  
-  name        'print-stack'
+class IRWebmachine::Pry::PrintStack < Pry::ClassCommand
+
+  match       'print-stack'
   description 'Prints the call stack for the previous webmachine request.'
   group       'irwebmachine'
   banner <<-BANNER
