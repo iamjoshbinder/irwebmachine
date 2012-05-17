@@ -4,7 +4,7 @@ class IRWebmachine::Tracer
   
   def initialize
     @thread  = nil
-    @queue   = Queue.new
+    @queue   = SizedQueue.new(1)
     @targets = []
     @events  = []
   end
@@ -23,8 +23,8 @@ class IRWebmachine::Tracer
 
   def continue
     while @queue.empty?
-      @thread.run 
-      return if finished? 
+      sleep(0.01)
+      return if finished?
     end
     @queue.deq
   end
@@ -40,7 +40,7 @@ class IRWebmachine::Tracer
 
 private 
 
-  def tracer event, file, lineno, id, binding, klass
+  def tracer(event, file, lineno, id, binding, klass)
     try do
       has_ancestor = @targets.any? do |t| 
         klass.is_a?(Module) && klass.ancestors.include?(t) 
@@ -48,8 +48,7 @@ private
   
       if has_ancestor && @events.include?(event)
         frame = IRWebmachine::Frame.new(file, lineno, event, binding)
-        @queue.enq frame
-        Thread.stop
+        @queue.enq(frame)
       end
     end
   end
