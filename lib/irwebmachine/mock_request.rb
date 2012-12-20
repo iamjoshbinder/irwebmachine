@@ -1,7 +1,6 @@
 class IRWebmachine::MockRequest
-
-  def initialize
-    @app = IRWebmachine.app.delegate
+  def initialize(app)
+    @app = app
     @req = nil
     @res = nil
     @stack = IRWebmachine::Stack.new
@@ -11,20 +10,20 @@ class IRWebmachine::MockRequest
     @stack
   end
 
-  def run_nonblock *rest
-    setup *rest
-    @stack.tracer.trace { @app.dispatcher.dispatch(@req, @res) }
+  def run_nonblock(*args)
+    setup *args
+    @stack.tracer.trace do
+      @app.dispatcher.dispatch(@req, @res)
+    end
     @res
   end
 
-  def run *rest
-    setup *rest 
+  def run(*args)
+    setup *args
     @stack.tracer.trace { @app.dispatcher.dispatch(@req, @res) }
-    
     while frame = @stack.tracer.continue
       @stack << frame
     end
-
     @res
   end
 
@@ -33,12 +32,10 @@ class IRWebmachine::MockRequest
   end
 
 private
-
-  def setup type, path, params = {}, headers = {}, body = ""
+  def setup(type, path, params = {}, headers = {}, body = "")
     uri = URI::HTTP.build(host: "localhost", path: path)
-    uri.query_params.merge!(params) 
+    uri.query_params.merge!(params)
     @req = Webmachine::Request.new(type.upcase, uri, headers, body)
     @res = Webmachine::Response.new
   end
-
 end
