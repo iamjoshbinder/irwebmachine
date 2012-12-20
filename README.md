@@ -19,10 +19,6 @@ __FEATURES__
 
 The three cool features of the debugger might be:
 
-  - The ability to print the call stack for a resource after a request has 
-    happened. This can be very useful if you want to visualuze the path your 
-    webmachine resource took.
-
   - The ability to step inside a method on the call stack after a request has 
     happened. This can be useful if you'd like to inspect the state of a 
     resource after a request. You can jump into any method on the call stack.
@@ -30,6 +26,10 @@ The three cool features of the debugger might be:
   - The ability to step through each method on the call stack as a request is 
     happening. This one is great if you want to inspect state in "real time", as 
     a request happens.
+
+  - The ability to print the call stack for a resource after a request has 
+    happened. This can be very useful if you want to visualuze the path your 
+    webmachine resource took.
 
 __USAGE__
 
