@@ -15,12 +15,8 @@ class IRWebmachine::MockApplication
 
   %w(get post delete put).each do |type|
     define_method(type) do |*args|
-      do_request(type, *args)
+      @req = IRWebmachine::MockRequest.new @app
+      @res = @req.run(*[type, *args])
     end
-  end
-private
-  def do_request(*args, &block)
-    @req = IRWebmachine::MockRequest.new @app
-    @res = @req.run(*args)
   end
 end
