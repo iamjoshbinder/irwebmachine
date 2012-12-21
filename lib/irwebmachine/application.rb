@@ -1,4 +1,4 @@
-class IRWebmachine::MockApplication
+class IRWebmachine::Application
   def initialize(app)
     @app = app
     @req = nil
@@ -15,7 +15,7 @@ class IRWebmachine::MockApplication
 
   %w(get post delete put).each do |type|
     define_method(type) do |*args|
-      @req = IRWebmachine::MockRequest.new @app
+      @req = IRWebmachine::Request.new @app
       @res = @req.run(*[type, *args])
     end
   end

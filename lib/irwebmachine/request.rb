@@ -1,4 +1,4 @@
-class IRWebmachine::MockRequest
+class IRWebmachine::Request
   def initialize(app)
     @app = app
     @req = nil

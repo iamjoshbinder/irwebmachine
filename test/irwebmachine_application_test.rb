@@ -1,5 +1,5 @@
 require_relative "setup"
-class MockApplicationTest < Test::Unit::TestCase
+class IRWebmachine::ApplicationTest < Test::Unit::TestCase
   def setup
     IRWebmachine.app = app
     @app = IRWebmachine.app

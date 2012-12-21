@@ -6,25 +6,25 @@ class IRWebmachine::Pry::EnterStack < Pry::ClassCommand
   banner <<-BANNER
     enter-stack BREAKPOINT
 
-    Enters into the context of a method on the call stack for a webmachine 
+    Enters into the context of a method on the call stack for a webmachine
     request. BREAKPOINT can be retrieved from the print-stack command.
   BANNER
 
   def setup
     @app = target.eval "app"
     @pry = Pry.new :commands => IRWebmachine::Pry::Nav
-    @req = IRWebmachine::MockRequest.new
+    @req = IRWebmachine::Request.new @app
   end
 
   def process
     @req.run_nonblock *@app.last_request
-    repl @req.stack.continue 
+    repl @req.stack.continue
   end
 
-private 
+private
 
   def repl frame
-    until hit? 
+    until hit?
       if breakpoint =~ frame.to_s
         @hit = true
       else
@@ -38,7 +38,7 @@ private
 
     case @pry.repl(frame)
     when nil
-      # no-op (exit). 
+      # no-op (exit).
     when :next
       repl @req.stack.next
     when :continue
