@@ -5,6 +5,10 @@ class IRWebmachine::Application
     @res = nil
   end
 
+  def unbox
+    @app
+  end
+
   def last_response
     @res || raise(RuntimeError, "No active request.", [])
   end

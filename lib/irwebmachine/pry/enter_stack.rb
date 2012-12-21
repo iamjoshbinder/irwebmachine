@@ -13,7 +13,7 @@ class IRWebmachine::Pry::EnterStack < Pry::ClassCommand
   def setup
     @app = target.eval "app"
     @pry = Pry.new :commands => IRWebmachine::Pry::Nav
-    @req = IRWebmachine::Request.new @app
+    @req = IRWebmachine::Request.new @app.unbox
   end
 
   def process
