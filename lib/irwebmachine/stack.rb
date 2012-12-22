@@ -1,12 +1,12 @@
-class IRWebmachine::Stack 
+class IRWebmachine::Stack
   def initialize(stack = [])
     @stack = stack
     @index = 0
     @tracer = IRWebmachine::Tracer.new
-    @tracer.add_event "call", "return"
-    @tracer.add_target Webmachine::Resource::Callbacks
+    @tracer.events = "call", "return"
+    @tracer.targets =  Webmachine::Resource::Callbacks
   end
- 
+
   def push(*args)
     @stack.push(*args)
   end
@@ -37,20 +37,17 @@ class IRWebmachine::Stack
     if @index < @stack.size - 1
       @index += 1
     else
-      @index += 1 if @stack.size != 0 
+      @index += 1 if @stack.size != 0
       @stack << tracer.continue
     end
-
     @stack[@index]
   end
 
   def next
     frame = nil
-
-    while frame.nil? || !frame.event?(:call) 
+    while frame.nil? || !frame.event?(:call)
       frame = continue
     end
-
     frame
   end
 
@@ -60,7 +57,11 @@ class IRWebmachine::Stack
 
   def to_graph
     graph = Graph.new
-    @stack.each { |frame| graph.edge(frame.to_s) if frame.event?(:call) }
+    @stack.each do |frame|
+      if frame.event?(:call)
+        graph.edge(frame.to_s)
+      end
+    end
     graph
   end
 end

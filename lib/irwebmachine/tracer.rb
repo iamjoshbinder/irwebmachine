@@ -1,26 +1,79 @@
 require 'thread'
-
 class IRWebmachine::Tracer
-
   def initialize
     @thread  = nil
     @queue   = SizedQueue.new(1)
-    @targets = []
-    @events  = []
+    @targets = [BasicObject]
+    @events  = ["call", "c-call", "return", "c-return", "class", "end", "line",
+    "raise"]
   end
 
-  def add_event *event
-    @events.push(*event)
+  #
+  # @overload def events=(event1, event2, ...)
+  #
+  #   The [set\_trace\_func](http://apidock.com/ruby/Kernel/set_trace_func) API
+  #   documentation has a list of possible events.
+  #
+  #   @param [String] event1
+  #     An event.
+  #
+  #   @return [void]
+  #
+  #   @example
+  #     #
+  #     # Push a frame onto the queue when the "call" or "return" event is
+  #     # emitted by set_trace_func. By default, all events push a frame
+  #     # onto the queue.
+  #     #
+  #     tracer.events = "call", "return"
+  #
+  def events=(*events)
+    @events = events
   end
 
-  def add_target *target
-    @targets.push(*target)
+  #
+  # @overload def targets=(target1, target2, ...)
+  #
+  #   @param [Module] target1
+  #     A class/module.
+  #
+  #   @return [void]
+  #
+  #   @example
+  #     #
+  #     # Push a frame onto the queue when `binding.eval('self')` has
+  #     # Webmachine::Resource::Callbacks somewhere in its ancestry tree.
+  #     # By default, targets is equal to [BasicObject].
+  #     #
+  #     tracer.targets = Webmachine::Resource::Callbacks
+  #
+  def targets=(*targets)
+    @targets = *targets
   end
 
+  #
+  # @return [Boolean]
+  #   Returns true when the tracer has finished tracing.
+  #
   def finished?
     [false, nil].include? @thread.status
   end
 
+  #
+  # Resume execution of the tracer.
+  #
+  # @return [IRwebmachine::Frame]
+  #   Returns an instance of {IRWebmachine::Frame}.
+  #
+  # @example
+  #   #
+  #   # Each call to continue resumes & then suspends the tracer.
+  #   # If you want to trace until there is no more code to trace you
+  #   # could wrap this method in a loop.
+  #   #
+  #   tracer.continue
+  #   tracer.continue
+  #
   def continue
     while @queue.empty?
       sleep(0.01)
@@ -29,6 +82,21 @@ class IRWebmachine::Tracer
     @queue.deq
   end
 
+  #
+  # @overload def trace(&block)
+  #
+  #   @param [Proc] block
+  #     A block to execute inside the tracer.
+  #
+  #   @return [void]
+  #
+  #   @see Tracer#continue
+  #
+  #   @example
+  #     tracer.trace do
+  #       …
+  #     end
+  #
   def trace
     @thread ||=
     Thread.new do
