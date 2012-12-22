@@ -20,7 +20,7 @@ class IRWebmachine::Application
   %w(get post delete put).each do |type|
     define_method(type) do |*args|
       @req = IRWebmachine::Request.new @app
-      @res = @req.run(*[type, *args])
+      @res = @req.dispatch(*[type, *args])
     end
   end
 end

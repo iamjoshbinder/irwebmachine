@@ -1,5 +1,4 @@
 class IRWebmachine::Pry::EnterStack < Pry::ClassCommand
-
   match       'enter-stack'
   group       'irwebmachine'
   description 'Enters the context of a method on the call stack for a webmachine request.'
@@ -17,13 +16,11 @@ class IRWebmachine::Pry::EnterStack < Pry::ClassCommand
   end
 
   def process
-    @req.run_nonblock *@app.last_request
+    @req.dispatch! *@app.last_request
     repl @req.stack.continue
   end
-
 private
-
-  def repl frame
+  def repl(frame)
     until hit?
       if breakpoint =~ frame.to_s
         @hit = true
@@ -35,7 +32,6 @@ private
         end
       end
     end
-
     case @pry.repl(frame)
     when nil
       # no-op (exit).
@@ -55,7 +51,6 @@ private
   def breakpoint
     @breakpoint ||= Regexp.new(args.first.to_s)
   end
-
 end
 
 set = Pry::CommandSet.new

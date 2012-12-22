@@ -10,32 +10,26 @@ class IRWebmachine::Request
     @stack
   end
 
-  def run_nonblock(*args)
-    setup *args
-    @stack.tracer.trace do
-      @app.dispatcher.dispatch(@req, @res)
-    end
-    @res
-  end
-
-  def run(*args)
-    setup *args
-    @stack.tracer.trace { @app.dispatcher.dispatch(@req, @res) }
+  def dispatch(*args)
+    dispatch!(*args)
     while frame = @stack.tracer.continue
       @stack << frame
     end
     @res
   end
 
-  def to_a
-    [@req.method, @req.uri.path, @req.query, @req.headers, @req.body]
-  end
-
-private
-  def setup(type, path, params = {}, headers = {}, body = "")
+  def dispatch!(type, path, params = {}, headers = {}, body = "")
     uri = URI::HTTP.build(host: "localhost", path: path)
     uri.query_params.merge!(params)
-    @req = Webmachine::Request.new(type.upcase, uri, headers, body)
+    @req = Webmachine::Request.new type.upcase, uri, headers, body
     @res = Webmachine::Response.new
+    @stack.tracer.trace do
+      @app.dispatcher.dispatch(@req, @res)
+    end
+    @res
+  end
+
+  def to_a
+    [@req.method, @req.uri.path, @req.query, @req.headers, @req.body]
   end
 end
