@@ -9,46 +9,42 @@ class IRWebmachine::Tracer
   end
 
   #
-  # @overload def events=(event1, event2, ...)
+  # The [set\_trace\_func](http://apidock.com/ruby/Kernel/set_trace_func) API
+  # documentation has a list of possible events.
   #
-  #   The [set\_trace\_func](http://apidock.com/ruby/Kernel/set_trace_func) API
-  #   documentation has a list of possible events.
+  # @param [Array<String>] events
+  #   An event.
   #
-  #   @param [String] event1
-  #     An event.
+  # @return [void]
   #
-  #   @return [void]
+  # @example
+  #   #
+  #   # Push a frame onto the queue when the "call" or "return" event is
+  #   # emitted by set_trace_func. By default, all events push a frame
+  #   # onto the queue.
+  #   #
+  #   tracer.events = ["call", "return"]
   #
-  #   @example
-  #     #
-  #     # Push a frame onto the queue when the "call" or "return" event is
-  #     # emitted by set_trace_func. By default, all events push a frame
-  #     # onto the queue.
-  #     #
-  #     tracer.events = "call", "return"
-  #
-  def events=(*events)
+  def events=(events)
     @events = events
   end
 
   #
-  # @overload def targets=(target1, target2, ...)
+  # @param [Array<Module>] targets
+  #   An array of classes/modules.
   #
-  #   @param [Module] target1
-  #     A class/module.
+  # @return [void]
   #
-  #   @return [void]
+  # @example
+  #   #
+  #   # Push a frame onto the queue when `binding.eval('self')` has
+  #   # Webmachine::Resource::Callbacks somewhere in its ancestry tree.
+  #   # By default, targets is equal to [BasicObject].
+  #   #
+  #   tracer.targets = [Webmachine::Resource::Callbacks]
   #
-  #   @example
-  #     #
-  #     # Push a frame onto the queue when `binding.eval('self')` has
-  #     # Webmachine::Resource::Callbacks somewhere in its ancestry tree.
-  #     # By default, targets is equal to [BasicObject].
-  #     #
-  #     tracer.targets = Webmachine::Resource::Callbacks
-  #
-  def targets=(*targets)
-    @targets = *targets
+  def targets=(targets)
+    @targets = targets
   end
 
   #

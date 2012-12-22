@@ -3,8 +3,8 @@ class IRWebmachine::Stack
     @stack = stack
     @index = 0
     @tracer = IRWebmachine::Tracer.new
-    @tracer.events = "call", "return"
-    @tracer.targets =  Webmachine::Resource::Callbacks
+    @tracer.events = ["call", "do"]
+    @tracer.targets =  [Webmachine::Resource::Callbacks]
   end
 
   def push(*args)
