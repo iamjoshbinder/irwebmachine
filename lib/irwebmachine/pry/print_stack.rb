@@ -20,9 +20,12 @@ class IRWebmachine::Pry::PrintStack < Pry::ClassCommand
   end
 
   def process
-    copy = stack.to_a.select { |f| f.event?(:call) && f.to_s =~ filter }
-    copy = copy.map(&:to_s).join "\n"
-    stagger_output text.with_line_numbers(copy, 0)
+    frames = stack.to_a.map do |frame|
+      if frame.ruby_call? && frame.to_s =~ filter
+        frame.to_s
+      end
+    end.compact.join "\n"
+    stagger_output text.with_line_numbers(frames, 0)
   end
 
 private

@@ -8,6 +8,10 @@ class IRWebmachine::Frame
     @klass   = binding.eval("self").method(@method).owner
   end
 
+  def ruby_call?
+    "call" == @event
+  end
+
   def event?(type)
     type.to_s == @event
   end
