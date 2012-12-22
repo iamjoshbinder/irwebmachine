@@ -60,7 +60,6 @@ class IRWebmachine::Tracer
   end
 
   #
-  # Resume execution of the tracer.
   #
   # @return [IRwebmachine::Frame]
   #   Returns an instance of {IRWebmachine::Frame}.
