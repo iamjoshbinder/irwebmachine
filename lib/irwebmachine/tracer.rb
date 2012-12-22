@@ -13,7 +13,7 @@ class IRWebmachine::Tracer
   # documentation has a list of possible events.
   #
   # @param [Array<String>] events
-  #   An event.
+  #   An array of events.
   #
   # @return [void]
   #

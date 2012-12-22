@@ -3,7 +3,7 @@ class IRWebmachine::Stack
     @stack = stack
     @index = 0
     @tracer = IRWebmachine::Tracer.new
-    @tracer.events = ["call", "do"]
+    @tracer.events = ["call", "return"]
     @tracer.targets =  [Webmachine::Resource::Callbacks]
   end
 
