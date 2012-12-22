@@ -75,7 +75,7 @@ class IRWebmachine::Tracer
   #
   def continue
     while @queue.empty?
-      sleep(0.01)
+      sleep 0.01
       return if finished?
     end
     @queue.deq
@@ -151,12 +151,15 @@ private
 
        The tracer has crashed.
        This is a bug in IRWebmachine.
-       Please report to https://github.com/generalassembly/irwebmachine.
-       Thanks!
 
-       Error (#{e.class})
+       EXCEPTION:
+       #{e.class}
+
+       MESSAGE:
        #{e.message}
 
+       BACKTRACE:
+       #{e.backtrace.each { |line| puts(line) }}
       CRASH
       Thread.current.set_trace_func(nil)
     end
