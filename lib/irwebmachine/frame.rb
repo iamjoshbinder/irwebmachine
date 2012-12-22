@@ -16,6 +16,10 @@ class IRWebmachine::Frame
     type.to_s == @event
   end
 
+  def context
+    @binding
+  end
+
   def to_s
     "#{@klass}##{@method}"
   end

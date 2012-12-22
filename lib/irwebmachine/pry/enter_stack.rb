@@ -32,7 +32,7 @@ private
         end
       end
     end
-    case @pry.repl(frame)
+    case @pry.repl(frame.context)
     when nil
       # no-op (exit).
     when :next
