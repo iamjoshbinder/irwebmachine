@@ -5,28 +5,27 @@ class IRWebmachine::Pry::PrintStack < Pry::ClassCommand
   group       'irwebmachine'
   banner <<-BANNER
     print-stack [OPTIONS]
-    
-    Prints the stack of method calls(in order) made during the previous 
-    webmachine request. Classes & Modules unrelated to webmachine are excluded. 
-    Optionally accepts a -f switch for filtering the stack.
+
+    Prints the stack of method calls(in order) made during the previous
+    webmachine request. The stack excludes calls that don't originate from
+    a subclass of Webmachine::Resource.
   BANNER
 
   def setup
-    @app = target.eval("app")
+    @app = target.eval "app"
   end
 
   def options(opt)
     opt.on :f, 'Filter the stack with a regular expression.', optional: true
   end
-  
+
   def process
-    copy = stack.to_a.select! { |f| f.event?(:call) && f.to_s =~ filter }
+    copy = stack.to_a.select { |f| f.event?(:call) && f.to_s =~ filter }
     copy = copy.map(&:to_s).join "\n"
     stagger_output text.with_line_numbers(copy, 0)
   end
 
 private
-
   def stack
     @app.last_request.stack
   end
@@ -34,9 +33,7 @@ private
   def filter
     Regexp.new(opts[:f].to_s)
   end
-
 end
-
 set = Pry::CommandSet.new
-set.commands["print-stack"] = IRWebmachine::Pry::PrintStack 
+set.commands["print-stack"] = IRWebmachine::Pry::PrintStack
 Pry.commands.import(set)
