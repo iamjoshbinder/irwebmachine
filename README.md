@@ -15,8 +15,23 @@ resource. IRwebmachine is designed to be used inside a REPL such as Pry, but
 there is very basic IRB support as well. I recommend Pry for now, as IRB support
 is unfinished & Pry offers some cool features for free.
 
-Examples & a walkthrough are available on the 
-[wiki](https://github.com/generalassembly/irwebmachine/wiki/Pry).
+__CONFIGURATION__
+
+Copy the ruby code below into a project-local .pryrc file.
+'MyApp' can be an instance of Webmachine::Application, or a subclass of 
+Webmachine::Resource. It is used by irwebmachine when dispatching requests and 
+it can be changed to another application or resource while in the REPL.
+
+
+```ruby
+require 'myapp'
+require 'irwebmssiachine/pry'
+IRWebmachine.app = MyApp
+```
+
+__USAGE__
+
+todo
 
 __PLATFORM SUPPORT__
 
