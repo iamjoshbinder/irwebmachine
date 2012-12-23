@@ -25,7 +25,7 @@ it can be changed to another application or resource while in the REPL.
 
 ```ruby
 require 'myapp'
-require 'irwebmssiachine/pry'
+require 'irwebmachine/pry'
 IRWebmachine.app = MyApp
 ```
 
