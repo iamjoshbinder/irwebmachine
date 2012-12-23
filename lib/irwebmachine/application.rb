@@ -19,7 +19,7 @@ class IRWebmachine::Application
 
   %w(get post delete put).each do |type|
     define_method(type) do |*args|
-      @req = IRWebmachine::Request.new @app
+      @req = IRWebmachine::TracedRequest.new @app
       @res = @req.dispatch(*[type, *args])
     end
   end
@@ -35,7 +35,7 @@ private
         end
       end
     else
-      app
+      obj
     end
   end
 end

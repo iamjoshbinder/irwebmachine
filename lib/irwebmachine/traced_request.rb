@@ -1,4 +1,4 @@
-class IRWebmachine::Request
+class IRWebmachine::TracedRequest
   def initialize(app)
     @app = app
     @req = nil
