@@ -9,8 +9,8 @@ __OVERVIEW__
 
 __DESCRIPTION__
 
-IRWebmachine is an interactive debugger you can use to trace and debug
-HTTP requests made to a [webmachine-ruby](https://github.com/seancribbs/webmachine-ruby)
+IRWebmachine is an interactive debugger you can use to make, trace & debug
+HTTP requests destined for a [webmachine-ruby](https://github.com/seancribbs/webmachine-ruby)
 resource. IRwebmachine is designed to be used inside a REPL such as Pry, but 
 there is very basic IRB support as well. I recommend Pry for now, as IRB support
 is unfinished & Pry offers some cool features for free.
