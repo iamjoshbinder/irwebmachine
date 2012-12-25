@@ -33,10 +33,10 @@ __USAGE__
 
 - requests
 
-The first thing you'll probably want to do is make a request to a resource. 
-This can be done through the 'app' method:
+  The first thing you'll probably want to do is make a request to a resource. 
+  This can be done through the 'app' method:
 
-    [1] pry(main)> app.get "/"
+      [1] pry(main)> app.get "/"
       => #<Webmachine::Response:0x007faa44143980
           @body="GET OK",
           @code=200,
@@ -47,6 +47,7 @@ This can be done through the 'app' method:
             "X-Request-Headers"=>{}},
           @redirect=false,
           @trace=[]>
+
 - tracing 
 
 todo
