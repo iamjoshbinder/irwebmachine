@@ -36,17 +36,17 @@ __USAGE__
   The first thing you'll probably want to do is make a request to a resource. 
   This can be done through the 'app' method:
 
-      [1] pry(main)> app.get "/"
-      => #<Webmachine::Response:0x007faa44143980
-          @body="GET OK",
-          @code=200,
-          @headers=
-            {"Content-Type"=>"plain/text",
-            "Content-Length"=>"6",
-            "X-Request-Query"=>{},
-            "X-Request-Headers"=>{}},
-          @redirect=false,
-          @trace=[]>
+        [1] pry(main)> app.get "/"
+        => #<Webmachine::Response:0x007faa44143980
+            @body="GET OK",
+            @code=200,
+            @headers=
+              {"Content-Type"=>"plain/text",
+              "Content-Length"=>"6",
+              "X-Request-Query"=>{},
+              "X-Request-Headers"=>{}},
+            @redirect=false,
+            @trace=[]>
 
 - tracing 
 
