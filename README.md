@@ -68,8 +68,10 @@ __USAGE__
 - Debugging
 
   You can jump inside any method on the call stack through the 'enter-stack' 
-  command. It accepts a breakpoint as an argument, but it is optional.
-    
+  command. It accepts a breakpoint as an argument, but it is optional. The stack 
+  can be navigated in 'real time' through the 'continue', 'next', and 
+  'previous' commands.
+      
         [3] pry(main)> enter-stack
         From: /Users/rob/.rbenv/… (shortened for README)
         => 36: def self.new(request, response)
@@ -81,10 +83,7 @@ __USAGE__
            42: end
         [4] pry(Resource)> 
   
-  The stack can be navigated through the 'continue', 'next', and 'previous' 
-  commands. The call stack is navigated in 'real time'. In other words, 
-  if you are in 'method A' but 'method B' has yet to be called you should 
-  not see any state set by 'method B' until you step through it.
+
 
 __PLATFORM SUPPORT__
 
