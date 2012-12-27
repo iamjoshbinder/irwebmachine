@@ -53,17 +53,17 @@ __USAGE__
 - Tracing 
 
   After you have made a request you can visualize what methods were called(and
-  in what order) through the `print-stack` command:
+  in what order) through the `print-stack` command. The output can be filtered, 
+  see `print-stack -h` for more information.
 
-        [2] pry(main)> print-stack                                                                                   0: #<Class:Webmachine::Resource>#new
+        [2] pry(main)> print-stack
+         0: #<Class:Webmachine::Resource>#new
          1: Webmachine::Resource::Callbacks#service_available?
          2: Webmachine::Resource::Callbacks#known_methods
          3: Webmachine::Resource::Callbacks#uri_too_long?
          4: Resource#allowed_methods
          …
         31: Resource#finish_request
-
-  The output can be filtered, see `print-stack -h` for more information.
 
 - Debugging
 
@@ -80,6 +80,8 @@ __USAGE__
            41:   instance
            42: end
 
+        [4] pry(Resource)> 
+  
   The stack can be navigated through the 'continue', 'next', and 'previous' 
   commands. The call stack is navigated in 'real time'. In other words, 
   if you are in 'method A' but 'method B' has yet to be called you should 
