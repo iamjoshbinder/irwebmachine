@@ -55,13 +55,13 @@ __USAGE__
   After you have made a request you can visualize what methods were called(and
   in what order) through the `print-stack` command:
 
-      [2] pry(main)> print-stack                                                                                   0: #<Class:Webmachine::Resource>#new
-       1: Webmachine::Resource::Callbacks#service_available?
-       2: Webmachine::Resource::Callbacks#known_methods
-       3: Webmachine::Resource::Callbacks#uri_too_long?
-       4: Resource#allowed_methods
-       …
-      31: Resource#finish_request
+        [2] pry(main)> print-stack                                                                                   0: #<Class:Webmachine::Resource>#new
+         1: Webmachine::Resource::Callbacks#service_available?
+         2: Webmachine::Resource::Callbacks#known_methods
+         3: Webmachine::Resource::Callbacks#uri_too_long?
+         4: Resource#allowed_methods
+         …
+        31: Resource#finish_request
 
   The output can be filtered, see `print-stack -h` for more information.
 
@@ -70,16 +70,15 @@ __USAGE__
   You can jump inside any method on the call stack through the 'enter-stack' 
   command. It accepts a breakpoint as an argument, but it is optional.
     
-      [3] pry(main)> enter-stack                                                                                                                                             
-      From: /Users/rob/.rbenv/…
+        [3] pry(main)> enter-stack                                                                                  From: /Users/rob/.rbenv/…
 
-      => 36: def self.new(request, response)
-         37:   instance = allocate
-         38:   instance.instance_variable_set(:@request, request)
-         39:   instance.instance_variable_set(:@response, response)
-         40:   instance.send :initialize
-         41:   instance
-         42: end
+        => 36: def self.new(request, response)
+           37:   instance = allocate
+           38:   instance.instance_variable_set(:@request, request)
+           39:   instance.instance_variable_set(:@response, response)
+           40:   instance.send :initialize
+           41:   instance
+           42: end
 
   The stack can be navigated through the 'continue', 'next', and 'previous' 
   commands. The call stack is navigated in 'real time'. In other words, 
