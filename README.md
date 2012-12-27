@@ -70,8 +70,8 @@ __USAGE__
   You can jump inside any method on the call stack through the 'enter-stack' 
   command. It accepts a breakpoint as an argument, but it is optional.
     
-        [3] pry(main)> enter-stack                                                                                  From: /Users/rob/.rbenv/…
-
+        [3] pry(main)> enter-stack
+        From: /Users/rob/.rbenv/… (shortened for README)
         => 36: def self.new(request, response)
            37:   instance = allocate
            38:   instance.instance_variable_set(:@request, request)
@@ -79,7 +79,6 @@ __USAGE__
            40:   instance.send :initialize
            41:   instance
            42: end
-
         [4] pry(Resource)> 
   
   The stack can be navigated through the 'continue', 'next', and 'previous' 
